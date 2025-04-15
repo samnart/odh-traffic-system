@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/samnart/odh-traffic-system/traffic-service/cache"
-	"github.com/samnart/odh-traffic-system/traffic-service/model"
+	"github.com/samnart/odh-traffic-system/traffic-service/pkg/cache"
+	"github.com/samnart/odh-traffic-system/traffic-service/pkg/model"
 )
 
 // TrafficService handles traffic data operations

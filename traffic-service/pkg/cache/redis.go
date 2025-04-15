@@ -36,7 +36,7 @@ func DefaultConfig() *Config {
 	password := os.Getenv("REDIS_PASSWORd")
 
 	return &Config{
-		Host: 		"localhost",
+		Host: 		"redis",
 		Port: 		"6379",
 		Password: 	password,
 		DB:			0,

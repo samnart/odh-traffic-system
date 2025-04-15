@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/samnart/odh-traffic-system/traffic-service/service"
+	"github.com/samnart/odh-traffic-system/traffic-service/internal/service"
 )
 
 // TrafficHandler handles HTTP requests related to traffic data

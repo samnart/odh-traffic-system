@@ -11,11 +11,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/samnart/odh-traffic-system/traffic-service/handler"
-	"github.com/samnart/odh-traffic-system/traffic-service/middleware/logging"
-	"github.com/samnart/odh-traffic-system/traffic-service/middleware/recovery"
-	"github.com/samnart/odh-traffic-system/traffic-service/service"
-	"github.com/samnart/odh-traffic-system/traffic-service/cache"
+	"github.com/samnart/odh-traffic-system/traffic-service/internal/handler"
+	"github.com/samnart/odh-traffic-system/traffic-service/internal/middleware/logging"
+	"github.com/samnart/odh-traffic-system/traffic-service/internal/middleware/recovery"
+	"github.com/samnart/odh-traffic-system/traffic-service/internal/service"
+	"github.com/samnart/odh-traffic-system/traffic-service/pkg/cache"
 )
 
 func main() {
