@@ -1,10 +1,10 @@
 module github.com/samnart/odh-traffic-system/traffic-service
 
-go 1.24.2
+go 1.21
 
 require (
-	github.com/gin-gonic/gin v1.10.0
-	github.com/redis/go-redis/v9 v9.7.3
+	github.com/gin-gonic/gin v1.9.1
+	github.com/redis/go-redis/v9 v9.3.0
 )
 
 require (
