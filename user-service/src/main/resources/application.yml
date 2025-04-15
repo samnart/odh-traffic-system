@@ -1,0 +1,19 @@
+spring:
+    application:
+        name: user-service
+    main:
+        allow-bean-definition-overriding: true
+    cloud:
+        discovery:
+            enabled: true
+server:
+    port: 8082
+eureka:
+    client:
+        serviceURL:
+            defaultZone: http://localhost:8761/eureka
+springdoc:
+    api-docs:
+        path: /v3/api-docs
+    swagger-ui:
+        path: /swagger-ui.html
