@@ -1,18 +1,18 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/samnart/odh-traffic-system/traffic-service/service"
 )
 
-func GetLatestTraffic(c *gin.Context) {
-	data, err := service.FetchTrafficData()
+func GetTrafficSummary(w http.ResponseWriter, r *http.Request) {
+	data, err := service.GetTrafficSummary()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch traffic data"})
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	c.JSON(http.StatusOK, data)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(data)
 }
