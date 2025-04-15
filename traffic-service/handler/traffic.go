@@ -2,9 +2,9 @@ package handler
 
 import (
 	"net/http"
-	"traffic-service/service"
 
 	"github.com/gin-gonic/gin"
+	"github.com/samnart/odh-traffic-system/traffic-service/service"
 )
 
 func GetLatestTraffic(c *gin.Context) {

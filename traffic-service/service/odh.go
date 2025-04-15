@@ -7,10 +7,9 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"traffic-service/cache"
-	"traffic-service/model"
 
 	"github.com/samnart/odh-traffic-system/traffic-service/cache"
+	"github.com/samnart/odh-traffic-system/traffic-service/model"
 )
 
 const (
@@ -24,8 +23,7 @@ func FetchTrafficData() ([]model.TrafficEntry, error) {
 	if cached, err := cache.Get(cacheKey); err == nil {
 		log.Println("Serving traffic data from cache")
 		var data []model.TrafficEntry
-		if err != json.Unmarshal([]byte(cached), &data)
-		err == nil {
+		if err := json.Unmarshal([]byte(cached), &data); err != nil {
 			return data, nil
 		}
 	}
