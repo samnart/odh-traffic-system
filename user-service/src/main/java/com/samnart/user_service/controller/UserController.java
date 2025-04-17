@@ -1,18 +1,17 @@
 package com.samnart.user_service.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import com.samnart.user_service.dto.UserDTO;
+import com.samnart.user_service.exception.UserNotFoundException;
 import com.samnart.user_service.model.User;
 import com.samnart.user_service.service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
@@ -29,10 +28,28 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable String id) {
+        return userService.getUserById(id)
+                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
+    }
+
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody Map<String, String> payload) {
-        String name = payload.get("name");
-        String email = payload.get("email");
-        return new ResponseEntity<>(userService.addUser(name, email), HttpStatus.OK);
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) {
+        User newUser = userService.addUser(userDTO.getName(), userDTO.getEmail());
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable String id, @Valid @RequestBody UserDTO userDTO) {
+        User updatedUser = userService.updateUser(id, userDTO.getName(), userDTO.getEmail());
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        userService.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
