@@ -1,0 +1,56 @@
+services:
+  # Eureka Service Discovery
+  discovery-server:
+    image: steeltoeoss/eureka-server:latest
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - microservice-network
+
+  # User Service (Java/Spring Boot)
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+    networks:
+      - microservice-network
+    depends_on:
+      - discovery-server
+
+  # Traffic Service (Go)
+  traffic-service:
+    build: ./traffic-service
+    container_name: traffic-service
+    ports:
+      - "8083:8083"  # Updated port to match the EXPOSE in your Dockerfile
+    environment:
+      - ENV=production
+    networks:
+      - microservice-network
+    depends_on:
+      - discovery-server
+
+  # API Gateway
+  gateway-service:
+    build: ./gateway-service
+    container_name: gateway-service
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+    networks:
+      - microservice-network
+    depends_on:
+      - discovery-server
+      - user-service
+      - traffic-service
+
+networks:
+  microservice-network:
+    driver: bridge
