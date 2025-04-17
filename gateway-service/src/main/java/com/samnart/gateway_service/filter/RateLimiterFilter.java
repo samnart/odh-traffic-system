@@ -2,7 +2,7 @@ package com.samnart.gateway_service.filter;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Bucket4j;
+// import io.github.bucket4j.Bucket4j;
 import io.github.bucket4j.Refill;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -14,8 +14,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -35,7 +38,12 @@ public class RateLimiterFilter implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        String clientIpAddress = exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
+        // String clientIpAddress = exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
+
+        String clientIpAddress = Optional.ofNullable(exchange.getRequest().getRemoteAddress())
+            .map(InetSocketAddress::getAddress)
+            .map(InetAddress::getHostAddress)
+            .orElse(null);
         
         // Get or create a bucket for this client
         Bucket bucket = buckets.computeIfAbsent(clientIpAddress, this::createNewBucket);
@@ -55,6 +63,6 @@ public class RateLimiterFilter implements GlobalFilter {
     private Bucket createNewBucket(String key) {
         Refill refill = Refill.intervally(refillTokens, Duration.ofSeconds(refillDuration));
         Bandwidth limit = Bandwidth.classic(capacity, refill);
-        return Bucket4j.builder().addLimit(limit).build();
+        return Bucket.builder().addLimit(limit).build();
     }
 }
